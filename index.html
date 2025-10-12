@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alex Kyubi — Personal</title>
+  <meta name="description" content="Насыщенная, минималистичная персональная страница Alex Kyubi: full‑stack, systems, retail‑tech." />
+  <meta property="og:title" content="Alex Kyubi" />
+  <meta property="og:description" content="Full‑stack • Systems • Retail‑Tech" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+  <link rel="icon" href="favicon.ico" sizes="any"/>
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand"><span class="bolt">⚡</span> <span>Alex Kyubi</span></div>
+    <div class="links">
+      <div class="projects">
+        <button id="projectsBtn" class="btn small">Projects ▾</button>
+        <div id="projMenu" class="menu" hidden>
+
+          <a href="https://streamtv.alexkyubi.com" target="_blank">StreamTV</a>
+          <a href="https://antitheftapp.alexkyubi.com" target="_blank">AntiTheftApp</a>
+          <a href="https://srpexpert.alexkyubi.com" target="_blank">SRPExpert</a>
+          <a href="https://promoparser.alexkyubi.com" target="_blank">PromoParser</a>
+          <a href="https://promo-analytics-hub.alexkyubi.com" target="_blank">Promo-Analytics-Hub</a>
+          <a href="https://huawei-instructor.alexkyubi.com" target="_blank">Huawei-Instructor</a>
+        </div>
+      </div>
+      <a href="#contact" class="btn small ghost">Contact</a>
+      <button id="themeToggle" class="btn small ghost" title="Theme">◎</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="hero">
+      <div class="avatar"><img id="avatar" alt="Avatar" decoding="async" loading="lazy"></div>
+      <h1>ALEX KYUBI</h1>
+      <p>Developer bild with AI • zero‑fluff portfolio</p>
+      <div class="divider"></div>
+    </section>
+
+    <!-- Skills Cloud (tag cloud genre-like) -->
+        <!-- Skills Cloud (non-selectable, decorative) -->
+    <section id="skills" class="skills-cloud">
+      
+      <div class="tags" aria-hidden="true">
+        <span class="tag" data-key="python" style="--w:1.25; --h:180">Python</span>
+        <span class="tag" data-key="web" style="--w:1.2; --h:210">Web (HTML+CSS+JS)</span>
+        <span class="tag" data-key="excel" style="--w:1.15; --h:140">Excel / VBA</span>
+        <span class="tag" data-key="low" style="--w:1.1; --h:35">Low‑level basics</span>
+        <span class="tag" data-key="ai" style="--w:1.18; --h:305">AI‑first workflow</span>
+      </div>
+    </section>
+
+
+    <section id="contact" class="contact">
+      <p class="mail-sub">Connect</p>
+      <a class="mail-cta" href="mailto:ya@AlexKyubi.ru">ya@AlexKyubi.ru</a>
+      <div class="foot">© <span id="year"></span> Alex Kyubi</div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

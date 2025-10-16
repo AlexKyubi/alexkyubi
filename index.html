@@ -2,60 +2,55 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes" />
   <title>Alex Kyubi — Personal</title>
-  <meta name="description" content="Насыщенная, минималистичная персональная страница Alex Kyubi: full‑stack, systems, retail‑tech." />
-  <meta property="og:title" content="Alex Kyubi" />
-  <meta property="og:description" content="Full‑stack • Systems • Retail‑Tech" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Портфолио Alex Kyubi: full-stack, systems, retail-tech." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
   <link rel="icon" href="favicon.ico" sizes="any"/>
 </head>
 <body>
-  <nav class="nav">
+  <nav class="nav" role="navigation" aria-label="Главная навигация">
     <div class="brand"><span class="bolt">⚡</span> <span>Alex Kyubi</span></div>
     <div class="links">
       <div class="projects">
-        <button id="projectsBtn" class="btn small">Projects ▾</button>
-        <div id="projMenu" class="menu" hidden>
-
-          <a href="https://streamtv.alexkyubi.com" target="_blank">StreamTV</a>
-          <a href="https://antitheftapp.alexkyubi.com" target="_blank">AntiTheftApp</a>
-          <a href="https://srpexpert.alexkyubi.com" target="_blank">SRPExpert</a>
-          <a href="https://promoparser.alexkyubi.com" target="_blank">PromoParser</a>
-          <a href="https://promo-analytics-hub.alexkyubi.com" target="_blank">Promo-Analytics-Hub</a>
-          <a href="https://huawei-instructor.alexkyubi.com" target="_blank">Huawei-Instructor</a>
+        <button id="projectsBtn" class="btn small" aria-haspopup="menu" aria-expanded="false">Projects ▾</button>
+        <div id="projMenu" class="menu" role="menu" hidden>
+          <a role="menuitem" href="https://streamtv.alexkyubi.com" target="_blank" rel="noopener">StreamTV</a>
+          <a role="menuitem" href="https://antitheftapp.alexkyubi.com" target="_blank" rel="noopener">AntiTheftApp</a>
+          <a role="menuitem" href="https://srpexpert.alexkyubi.com" target="_blank" rel="noopener">SRPExpert</a>
+          <a role="menuitem" href="https://promo-analytics-hub.alexkyubi.com" target="_blank" rel="noopener">Promo-Analytics-Hub</a>
+          <a role="menuitem" href="https://huawei-instructor.alexkyubi.com" target="_blank" rel="noopener">Huawei-Instructor</a>
         </div>
       </div>
       <a href="#contact" class="btn small ghost">Contact</a>
-      <button id="themeToggle" class="btn small ghost" title="Theme">◎</button>
+      <button id="themeToggle" class="btn small ghost" title="Theme" aria-label="Переключить тему">◎</button>
+      <button id="navToggle" class="btn small ghost only-mobile" aria-label="Меню" aria-expanded="false">☰</button>
     </div>
   </nav>
 
   <main class="page">
     <section class="hero">
-      <div class="avatar"><img id="avatar" alt="Avatar" decoding="async" loading="lazy"></div>
+      <div class="avatar" aria-hidden="true"><img id="avatar" alt="Avatar" decoding="async" loading="lazy"></div>
       <h1>ALEX KYUBI</h1>
-      <p>Developer bild with AI • zero‑fluff portfolio</p>
-      <div class="divider"></div>
+      <p>Developer built with AI • zero-fluff portfolio</p>
     </section>
 
-    <!-- Skills Cloud (tag cloud genre-like) -->
-        <!-- Skills Cloud (non-selectable, decorative) -->
-    <section id="skills" class="skills-cloud">
-      
-      <div class="tags" aria-hidden="true">
-        <span class="tag" data-key="python" style="--w:1.25; --h:180">Python</span>
-        <span class="tag" data-key="web" style="--w:1.2; --h:210">Web (HTML+CSS+JS)</span>
-        <span class="tag" data-key="excel" style="--w:1.15; --h:140">Excel / VBA</span>
-        <span class="tag" data-key="low" style="--w:1.1; --h:35">Low‑level basics</span>
-        <span class="tag" data-key="ai" style="--w:1.18; --h:305">AI‑first workflow</span>
-      </div>
+    <!-- Skills Cloud (Canvas, прозрачный фон) -->
+    <section id="skills" class="skills-area" aria-label="Облако навыков">
+      <canvas id="skillsCanvas" width="640" height="360" aria-hidden="true"></canvas>
+      <ul id="skillsData" class="sr-only">
+        <li data-hue="190" data-size="1.2">Python</li>
+        <li data-hue="210" data-size="1.15">Web (HTML/CSS/JS)</li>
+        <li data-hue="140" data-size="1.1">Excel / VBA</li>
+        <li data-hue="35"  data-size="1.05">Low-level basics</li>
+        <li data-hue="305" data-size="1.18">AI-first workflow</li>
+      </ul>
+      <!-- подсказку скрыли, поле не выделяем -->
     </section>
-
 
     <section id="contact" class="contact">
       <p class="mail-sub">Connect</p>

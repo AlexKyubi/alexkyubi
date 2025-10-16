@@ -14,7 +14,7 @@
 </head>
 <body>
   <nav class="nav" role="navigation" aria-label="Главная навигация">
-    <div class="brand"><span class="bolt">⚡</span> <span>Alex Kyubi</span></div>
+    <div class="brand"><span class="bolt">⚡</span><span>Alex Kyubi</span></div>
     <div class="links">
       <div class="projects">
         <button id="projectsBtn" class="btn small" aria-haspopup="menu" aria-expanded="false">Projects ▾</button>
@@ -57,10 +57,13 @@
 
     <section id="contact" class="contact">
       <p class="mail-sub">Connect</p>
-      <a class="mail-cta" href="mailto:ya@AlexKyubi.ru">ya@AlexKyubi.ru</a>
+      <!-- неоновая текст-ссылка вместо кнопки -->
+      <a id="mailLink" class="mail-link neon" href="mailto:ya@AlexKyubi.ru" data-copy="ya@AlexKyubi.ru">ya@AlexKyubi.ru</a>
       <div class="foot">© <span id="year"></span> Alex Kyubi</div>
     </section>
   </main>
+
+  <div id="toast" class="toast" hidden>Скопировано в буфер обмена</div>
 
   <script src="script.js" defer></script>
 </body>

@@ -1,12 +1,12 @@
 /* =========================================================================
-   UI BASICS (год, тема, меню)
+   UI BASICS (год, тема, меню, неоновая почта)
    ========================================================================= */
 (() => {
   const y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
   const root = document.documentElement;
-  const THEME_KEY = 'ak_theme_v4';
+  const THEME_KEY = 'ak_theme_v5';
   const saved = localStorage.getItem(THEME_KEY);
   if (saved === 'light') root.classList.add('light');
   const tgl = document.getElementById('themeToggle');
@@ -30,7 +30,7 @@
     window.addEventListener('scroll', () => setOpen(false), { passive: true });
   }
 
-  // Avatar loader без 404 в консоли (HEAD-проверка)
+  // Avatar loader с HEAD-проверкой (без 404 в консоли)
   const img = document.getElementById('avatar');
   if (img) {
     const candidates = [
@@ -39,19 +39,38 @@
     ];
     (async () => {
       for (const src of candidates) {
-        try {
-          const res = await fetch(src, { method: 'HEAD' });
-          if (res.ok) { img.src = src; return; }
-        } catch {}
+        try { const r = await fetch(src, { method:'HEAD' }); if (r.ok) { img.src = src; return; } } catch {}
       }
-      // если ничего нет — убираем <img>, оставляем декоративный фон
       img.remove();
     })();
+  }
+
+  // Неоновая почта: tap-and-hold для копирования
+  const mail = document.getElementById('mailLink');
+  const toast = document.getElementById('toast');
+  if (mail && toast) {
+    let holdTimer;
+    const showToast = (txt) => {
+      toast.textContent = txt || 'Скопировано';
+      toast.hidden = false;
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => (toast.hidden = true), 1600);
+    };
+    mail.addEventListener('pointerdown', (e) => {
+      holdTimer = setTimeout(async () => {
+        try { await navigator.clipboard.writeText(mail.dataset.copy || mail.textContent.trim()); showToast('Скопировано в буфер'); }
+        catch { showToast('Не удалось скопировать'); }
+      }, 450);
+    }, { passive: true });
+    const clear = () => clearTimeout(holdTimer);
+    mail.addEventListener('pointerup', clear, { passive: true });
+    mail.addEventListener('pointercancel', clear, { passive: true });
+    mail.addEventListener('pointerleave', clear, { passive: true });
   }
 })();
 
 /* =========================================================================
-   SKILLS CLOUD — БИЛЬЯРД + МАГНИТ (Canvas, прозрачный фон)
+   SKILLS CLOUD — БИЛЬЯРД, МАГНИТ, МОБИЛЬНЫЙ ТЮНИНГ, ГИРО-ГРАВИТАЦИЯ
    ========================================================================= */
 (() => {
   const canvas = document.getElementById('skillsCanvas');
@@ -62,22 +81,36 @@
   const DPR = () => Math.max(1, Math.min(3, window.devicePixelRatio || 1));
   let dpr = DPR();
 
-  // Конфиг (можно настраивать)
+  // Определяем «мобильность»
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 700;
+
+  // Базовый конфиг, дальше подстроим под устройство
   const CFG = {
-    gravityToCenter: 0.0007,
-    cursorMagnet:    0.2,    // сила «магнита» ко всем шарам
-    grabStrength:    0.4, // сила притяжения при захвате шара
-    damping:         0.995, 
-    wallBounce:      1.0, 
-    maxSpeed:        1100,
+    gravityToCenter: 0.0008,
+    cursorMagnet:    0.004,      // сила магнита к курсору (ко всем шарам)
+    grabStrength:    0.22,       // перетаскивание
+    damping:         0.995,      // затухание
+    wallBounce:      1.0,
+    maxSpeed:        1100,       // px/s
+    textScale:       0.90,
     fontFamily:      'Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica Neue, Arial, Noto Sans, sans-serif',
-    textScale:       0.6    // <— коэффициент размера текста (меньше — мельче)
+    flickScale:      8,          // множитель «флика» при отпускании
+    baseRadiusPct:   0.095       // от меньшей стороны контейнера
   };
 
-  // Читаем JSON
+  // Подстройка под смартфоны/планшеты
+  if (isCoarse) {
+    CFG.cursorMagnet = 0.0025;
+    CFG.maxSpeed     = 750;
+    CFG.damping      = 0.9965;
+    CFG.flickScale   = 4.5;
+    CFG.baseRadiusPct= 0.075;    // шары поменьше
+    CFG.textScale    = 0.85;
+  }
+
+  // Читаем JSON с навыками
   let skills = [];
-  try { skills = JSON.parse(dataEl.textContent || '[]'); }
-  catch { skills = []; }
+  try { skills = JSON.parse(dataEl.textContent || '[]'); } catch { skills = []; }
 
   // Геометрия
   let Wcss = 640, Hcss = 360;
@@ -87,20 +120,18 @@
     const rect = canvas.getBoundingClientRect();
     Wcss = Math.max(280, rect.width);
     Hcss = Math.max(240, rect.height);
-    W = Math.round(Wcss * dpr);
-    H = Math.round(Hcss * dpr);
+    W = Math.round(Wcss * dpr); H = Math.round(Hcss * dpr);
     canvas.width = W; canvas.height = H;
     canvas.style.width = `${Math.round(Wcss)}px`;
     canvas.style.height = `${Math.round(Hcss)}px`;
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
   }
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
   // Шары
   const balls = skills.map((s, i) => {
-    const base = Math.min(Wcss, Hcss) * 0.095; // увеличенные шары
+    const base = Math.min(Wcss, Hcss) * CFG.baseRadiusPct;
     const r = base * (s.size ?? 1);
     const m = Math.max(1, (r * r) / 300);
     const angle = (i / Math.max(1, skills.length)) * Math.PI * 2;
@@ -111,8 +142,8 @@
       label: s.label || 'Skill', hue: +s.hue || 220, r, m,
       x: cx + Math.cos(angle) * rx,
       y: cy + Math.sin(angle) * ry,
-      vx: (Math.random() - 0.5) * 70,
-      vy: (Math.random() - 0.5) * 70,
+      vx: (Math.random() - 0.5) * 60,
+      vy: (Math.random() - 0.5) * 60,
       grabbed: false
     };
   });
@@ -147,7 +178,8 @@
     if (e.pointerId === pointer.id && pointer.grabbedBall >= 0) {
       const b = balls[pointer.grabbedBall];
       b.grabbed = false;
-      b.vx += pointer.vx * 8; b.vy += pointer.vy * 8; // флик
+      b.vx += pointer.vx * CFG.flickScale; // мягче на мобайле
+      b.vy += pointer.vy * CFG.flickScale;
     }
     pointer.active = false; pointer.id = null; pointer.grabbedBall = -1;
   }, { passive: true });
@@ -167,6 +199,19 @@
     return -1;
   }
 
+  // Гироскоп-гравитация (тихо, только на мобильных)
+  let tilt = { ax: 0, ay: 0 }; // небольшая добавка к ускорению
+  if (isCoarse && 'DeviceOrientationEvent' in window) {
+    window.addEventListener('deviceorientation', (e) => {
+      // нормализуем и фильтруем
+      const gx = (e.gamma || 0) / 90;   // -1..1
+      const gy = (e.beta  || 0) / 180;  // -0.5..0.5 примерно
+      const k = 18; // сила
+      tilt.ax = gx * k;
+      tilt.ay = gy * k;
+    }, { passive: true });
+  }
+
   // Физика
   let lastTs = performance.now();
   function step(ts) {
@@ -178,8 +223,8 @@
     const cursorOn = pointerVisible();
 
     for (const b of balls) {
-      let ax = (cx - b.x) * CFG.gravityToCenter;
-      let ay = (cy - b.y) * CFG.gravityToCenter;
+      let ax = (cx - b.x) * CFG.gravityToCenter + tilt.ax;
+      let ay = (cy - b.y) * CFG.gravityToCenter + tilt.ay;
 
       // медленный магнит ко всем шарам
       if (cursorOn) {
@@ -209,10 +254,10 @@
     // стенки
     for (const b of balls) {
       const pad = 2;
-      if (b.x - b.r < pad) { b.x = pad + b.r; b.vx = Math.abs(b.vx) * CFG.wallBounce; }
-      else if (b.x + b.r > Wcss - pad) { b.x = Wcss - pad - b.r; b.vx = -Math.abs(b.vx) * CFG.wallBounce; }
-      if (b.y - b.r < pad) { b.y = pad + b.r; b.vy = Math.abs(b.vy) * CFG.wallBounce; }
-      else if (b.y + b.r > Hcss - pad) { b.y = Hcss - pad - b.r; b.vy = -Math.abs(b.vy) * CFG.wallBounce; }
+      if (b.x - b.r < pad) { b.x = pad + b.r; b.vx = Math.abs(b.vx) * 1.0; }
+      else if (b.x + b.r > Wcss - pad) { b.x = Wcss - pad - b.r; b.vx = -Math.abs(b.vx) * 1.0; }
+      if (b.y - b.r < pad) { b.y = pad + b.r; b.vy = Math.abs(b.vy) * 1.0; }
+      else if (b.y + b.r > Hcss - pad) { b.y = Hcss - pad - b.r; b.vy = -Math.abs(b.vy) * 1.0; }
     }
 
     draw();
@@ -266,7 +311,7 @@
       ctx.lineWidth = 1; ctx.strokeStyle = border; ctx.stroke();
 
       const baseFont = b.r * 0.5 * (CFG.textScale ?? 1);
-      const fontSize = Math.max(10, Math.min(26, baseFont));
+      const fontSize = Math.max(10, Math.min(isCoarse ? 22 : 26, baseFont));
       ctx.font = `600 ${fontSize}px ${CFG.fontFamily}`;
       ctx.fillStyle = fg;
       drawMultilineCentered(ctx, b.label, b.x, b.y, b.r * 1.7, fontSize * 1.15);

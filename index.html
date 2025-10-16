@@ -42,14 +42,17 @@
     <!-- Skills Cloud (Canvas, прозрачный фон) -->
     <section id="skills" class="skills-area" aria-label="Облако навыков">
       <canvas id="skillsCanvas" width="640" height="360" aria-hidden="true"></canvas>
-      <ul id="skillsData" class="sr-only">
-        <li data-hue="190" data-size="1.2">Python</li>
-        <li data-hue="210" data-size="1.15">Web (HTML/CSS/JS)</li>
-        <li data-hue="140" data-size="1.1">Excel / VBA</li>
-        <li data-hue="35"  data-size="1.05">Low-level basics</li>
-        <li data-hue="305" data-size="1.18">AI-first workflow</li>
-      </ul>
-      <!-- подсказку скрыли, поле не выделяем -->
+
+      <!-- Источник данных как JSON (ничего не отображается на странице) -->
+      <script id="skillsData" type="application/json">
+        [
+          { "label": "Python",               "hue": 190, "size": 1.20 },
+          { "label": "Web (HTML/CSS/JS)",   "hue": 210, "size": 1.15 },
+          { "label": "Excel / VBA",         "hue": 140, "size": 1.10 },
+          { "label": "Low-level basics",    "hue":  35, "size": 1.05 },
+          { "label": "AI-first workflow",   "hue": 305, "size": 1.18 }
+        ]
+      </script>
     </section>
 
     <section id="contact" class="contact">

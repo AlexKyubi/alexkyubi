@@ -18,12 +18,17 @@ body{
 
 /* NAV */
 .nav{
-  position:fixed; inset:0 0 auto 0; display:flex; justify-content:space-between; align-items:center;
+  position:fixed; left:0; right:0; top:0;
+  display:flex; justify-content:space-between; align-items:center;
   padding:12px 16px; background:linear-gradient(180deg, rgba(7,11,16,.85), rgba(7,11,16,0));
   backdrop-filter:saturate(140%) blur(6px); z-index:10;
+  padding-left:max(12px, env(safe-area-inset-left));
+  padding-right:max(12px, env(safe-area-inset-right));
 }
 .brand{font-weight:800; letter-spacing:.6px; display:flex; gap:8px; align-items:center}
-.links{display:flex; gap:10px; align-items:center}
+.brand .bolt{margin-right:6px}
+.links{display:flex; gap:10px; align-items:center; flex-wrap:nowrap}
+
 .btn{
   display:inline-flex; align-items:center; gap:10px; text-decoration:none; padding:12px 16px;
   border-radius:14px; border:1px solid var(--border); color:var(--fg);
@@ -68,17 +73,49 @@ body{
 
 /* CONTACT */
 .contact{margin:72px 0 20px; display:grid; place-items:center; gap:10px}
-.mail-cta{
-  display:inline-block; padding:16px 22px; border-radius:14px; text-decoration:none; color:#001018;
-  background:linear-gradient(135deg,var(--accent),#00b3ff); font-weight:900; letter-spacing:.4px;
-  box-shadow:0 16px 36px rgba(0,229,255,.3);
-}
 .mail-sub{color:var(--muted); margin:0 0 6px}
-.foot{margin-top:10px; color:#7b8ba7; text-align:center; font-size:12px}
 
+/* неоновая текстовая ссылка */
+.mail-link{
+  font-family:Orbitron,Inter,sans-serif;
+  font-weight:800; letter-spacing:1.2px;
+  text-decoration:none;
+  position:relative;
+  background: linear-gradient(90deg, var(--accent), #00b3ff 60%, var(--accent-2));
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent;
+  filter: drop-shadow(0 0 10px rgba(0,229,255,.35)) drop-shadow(0 0 25px rgba(124,58,237,.25));
+}
+.mail-link::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-6px; height:2px;
+  background: radial-gradient(closest-side, rgba(0,229,255,.9), rgba(0,229,255,0));
+  transform: translateY(0); transition: transform .2s ease;
+}
+.mail-link:hover::after{ transform: translateY(1px) }
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+  background:rgba(15,22,34,.9); color:var(--fg);
+  border:1px solid var(--border); border-radius:12px; padding:10px 14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35); z-index:50; font-size:14px;
+}
+
+/* MOBILE TUNING */
 @media (max-width:560px){
-  .page{ padding:78px 12px 64px; }
-  .only-mobile{ display:inline-flex; }
+  .page{ padding:74px 12px 64px; }
+  .hero h1{ font-size:38px }
+  .links{ gap:6px; }
+  .btn.small{ padding:8px 12px; min-height:40px; font-size:14px }
+  .nav{ padding:10px 12px; }
   #skillsCanvas{ height:320px; }
-  .hero h1{ font-size:36px }
+}
+@media (max-width:400px){
+  #themeToggle{ display:none; } /* экономим место, чтобы кнопки не уезжали */
+  .brand span{ font-size:18px; }
+}
+@media (max-width:360px){
+  .btn.small{ padding:7px 10px; font-size:13px }
+  .brand span{ font-size:17px; letter-spacing:.4px }
 }
